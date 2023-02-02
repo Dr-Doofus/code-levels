@@ -1,0 +1,411 @@
+{
+  "name": "code-levels",
+  "displayName": "VS Code Levels",
+  "description": "Adds various experience bars to track your coding progress",
+  "version": "1.1.0",
+  "publisher": "DrDoofus",
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/_main.min.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "code-levels.openuserview",
+        "category": "CLV",
+        "title": "Open User Profile"
+      },
+      {
+        "command": "code-levels.openworkspaceview",
+        "category": "CLV",
+        "title": "Open Workspace Profile"
+      },
+      {
+        "command": "code-levels.changebar.user",
+        "category": "CLV Bar",
+        "title": "Switch to Main User Level"
+      },
+      {
+        "command": "code-levels.changebar.workspace",
+        "category": "CLV Bar",
+        "title": "Switch to Main Workspace Level"
+      },
+      {
+        "command": "code-levels.changebar.userlang",
+        "category": "CLV Bar",
+        "title": "Switch to User Language Level"
+      },
+      {
+        "command": "code-levels.changebar.workspacelang",
+        "category": "CLV Bar",
+        "title": "Switch to Workspace Language Level"
+      },
+      {
+        "command": "code-levels.recalculate.user",
+        "category": "CLV Levels",
+        "title": "Force Main User Level Recalculation"
+      },
+      {
+        "command": "code-levels.recalculate.userlang",
+        "category": "CLV Levels",
+        "title": "Force User Language Level Recalculation"
+      },
+      {
+        "command": "code-levels.recalculate.workspace",
+        "category": "CLV Levels",
+        "title": "Force Main Workspace Level Recalculation"
+      },
+      {
+        "command": "code-levels.recalculate.workspacelang",
+        "category": "CLV Levels",
+        "title": "Force Workspace Language Level Recalculation"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "code-levels.changebar.user",
+        "key": "ctrl+alt+1",
+        "mac": "cmd+option+1"
+      },
+      {
+        "command": "code-levels.changebar.workspace",
+        "key": "ctrl+alt+2",
+        "mac": "cmd+option+2"
+      },
+      {
+        "command": "code-levels.changebar.userlang",
+        "key": "ctrl+alt+3",
+        "mac": "cmd+option+3"
+      },
+      {
+        "command": "code-levels.changebar.workspacelang",
+        "key": "ctrl+alt+4",
+        "mac": "cmd+option+4"
+      },
+      {
+        "command": "code-levels.openuserview",
+        "key": "ctrl+alt+5",
+        "mac": "cmd+option+5"
+      },
+      {
+        "command": "code-levels.openworkspaceview",
+        "key": "ctrl+alt+6",
+        "mac": "cmd+option+6"
+      }
+    ],
+    "configuration": {
+      "title": "VS Code Levels",
+      "properties": {
+        "code-levels.caps.mainUser": {
+          "description": "Limits the display of user level on the tooltip, status bar and webview to this amount. Any number lower than 1 means no cap.",
+          "type": "number",
+          "default": 0,
+          "scope": "application"
+        },
+        "code-levels.caps.mainWorkspace": {
+          "description": "Limits the display of workspace level on the tooltip, status bar and webview to this amount. Any number lower than 1 means no cap.",
+          "type": "number",
+          "default": 0,
+          "scope": "application"
+        },
+        "code-levels.caps.userLanguage": {
+          "description": "Limits the display of user language level on the tooltip, status bar and webview to this amount. Any number lower than 1 means no cap.",
+          "type": "number",
+          "default": 0,
+          "scope": "application"
+        },
+        "code-levels.caps.workspaceLanguage": {
+          "description": "Limits the display of workspace language level on the tooltip, status bar and webview to this amount. Any number lower than 1 means no cap.",
+          "type": "number",
+          "default": 0,
+          "scope": "application"
+        },
+        "code-levels.status.advancedBar": {
+          "description": "When enabled, replaces the simplistic bar with a more precise one. Causes the bar to shift around in width slightly, however.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.status.displayProgress": {
+          "description": "Shows progress to next level, as a bar, percentage, or nothing at all.",
+          "type": "string",
+          "default": "Bar",
+          "enum": [
+            "Nothing",
+            "Bar",
+            "Percentage"
+          ],
+          "enumDescriptions": [
+            "",
+            "▕█████▋                            ▏",
+            "72.44% |"
+          ]
+        },
+        "code-levels.status.displayPercentPrecision": {
+          "description": "If Display Progress is set to Percent, this setting changes its precision in decimals + 1.",
+          "type": "number",
+          "default": 3,
+          "enum": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "enumDescriptions": [
+            "72%",
+            "72.4%",
+            "72.44%",
+            "72.441%"
+          ]
+        },
+        "code-levels.status.displayBarLength": {
+          "description": "Experience bar length (in blocks)",
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 50
+        },
+        "code-levels.status.displayExperienceType": {
+          "description": "Choose which experience type/level gets shown. Also affects on click view.",
+          "type": "number",
+          "default": 1,
+          "enum": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "enumItemLabels": [
+            "Main User Level",
+            "Main Workspace Level",
+            "User Language Level",
+            "Workspace Language Level"
+          ]
+        },
+        "code-levels.status.levelDisplayType": {
+          "description": "Choose how the experience level should be shown.",
+          "type": "string",
+          "default": "Level",
+          "enum": [
+            "Disabled",
+            "Level",
+            "Level (Short)",
+            "Level (Type)",
+            "Level (Short Type)",
+            "Percentage"
+          ],
+          "enumDescriptions": [
+            "",
+            "Lv. 3",
+            "3",
+            "ULv3 / WLv3 / ULL3",
+            "U3 / W3 / u3",
+            "72%"
+          ]
+        },
+        "code-levels.status.levelPercentPrecision": {
+          "description": "If Level Display Type is set to Percentage, this setting changes its precision in decimals + 1.",
+          "type": "number",
+          "default": 1,
+          "enum": [
+            1,
+            2,
+            3
+          ],
+          "enumDescriptions": [
+            "72%",
+            "72.4%",
+            "72.44%"
+          ]
+        },
+        "code-levels.status.levelReadySymbol": {
+          "description": "If enabled, shows a symbol next to the tooltip when saving would cause a level up.",
+          "type": "boolean",
+          "default": true
+        },
+        "code-levels.status.levelReadySymbolType": {
+          "description": "If Level Ready Symbol is on, this setting changes the symbol that appears.",
+          "type": "string",
+          "default": "+",
+          "enum": [
+            "+",
+            "!",
+            "^",
+            "↑"
+          ]
+        },
+        "code-levels.tooltip.enableTooltip": {
+          "description": "This setting enables or disables the tooltip in its entirety.",
+          "type": "boolean",
+          "default": true
+        },
+        "code-levels.tooltip.enableUser": {
+          "description": "Show quick information about the user by mousing over the status bar. Always hides if user tracking is disabled.",
+          "type": "boolean",
+          "default": true
+        },
+        "code-levels.tooltip.enableUserTotal": {
+          "description": "Show total experience points in the user part of the tooltip.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.tooltip.enableUserLanguage": {
+          "description": "Show brief user language level (+ progress in percentage) in the user part of the tooltip.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.tooltip.enableWorkspace": {
+          "description": "Show quick information about the workspace by mousing over the status bar.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.tooltip.enableWorkspaceTotal": {
+          "description": "Show total experience points in the workspace part of the tooltip.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.tooltip.enableWorkspaceLanguage": {
+          "description": "Show brief workspace language level (+ progress in percentage) in the workspace part of the tooltip.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.tooltip.experienceSuffix": {
+          "description": "Change the suffix for point values seen at the tooltip. i.e. \"340xp\".",
+          "type": "string",
+          "default": "p",
+          "enum": [
+            " ",
+            "p",
+            "pt",
+            " pt",
+            "xp",
+            " xp",
+            "XP",
+            " XP"
+          ],
+          "enumDescriptions": [
+            "No suffix",
+            "",
+            "",
+            "Spaced",
+            "",
+            "Spaced",
+            "",
+            "Spaced"
+          ]
+        },
+        "code-levels.user.name": {
+          "markdownDescription": "Determines what file it saves to. Converts to alphanumerics. Saved file is hard trimmed to 32 characters. **AUTOMATICALLY RELOADS AFTER CHANGING YOUR USERNAME.**",
+          "default": "user",
+          "scope": "application",
+          "maxLength": 32
+        },
+        "code-levels.user.tracking": {
+          "description": "Enables experience gain for the user.",
+          "type": "boolean",
+          "default": true
+        },
+        "code-levels.user.trackLanguage": {
+          "description": "Enables language-specific tracking for current user.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.user.levelMod": {
+          "markdownDescription": "Recommended value is 2x user language mod. The higher the value, the harder it is to increase user level. **Forces a level recalculation if changed.**",
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "scope": "application"
+        },
+        "code-levels.user.levelModLanguage": {
+          "markdownDescription": "Recommended value is 0.5x user mod. The higher the value, the harder it is to increase user language level. **Forces a level recalculation if changed.**",
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "scope": "application"
+        },
+        "code-levels.workspace.tracking": {
+          "description": "Enables experience gain for the workspace. Saves a dotfile (.clvls) in the root of the first workspace folder.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.workspace.trackLanguage": {
+          "description": "Enables language-specific tracking for current workspace. Saves to the dotfile (.clvls) in the root of the first workspace folder.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.workspace.levelMod": {
+          "markdownDescription": "Recommended value is 2x workspace language mod. The higher the value, the harder it is to increase workspace level. **Forces a level recalculation if changed.**",
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "scope": "application"
+        },
+        "code-levels.workspace.levelModLanguage": {
+          "markdownDescription": "Recommended value is 0.5x workspace mod. The higher the value, the harder it is to increase workspace language level. **Forces a level recalculation if changed.**",
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "scope": "application"
+        },
+        "code-levels.other.bigNumberFormat": {
+          "description": "Change the large number format to something else.",
+          "type": "string",
+          "default": "Normal",
+          "enum": [
+            "Normal",
+            "SI"
+          ],
+          "enumDescriptions": [
+            "1e3 > 1k, 1e6 > 1M, 1e9 > 1B, T, Qa, etc.",
+            "1e3 > 1k, 1e6 > 1M, 1e9 > 1G, T, P, etc."
+          ]
+        },
+        "code-levels.other.barCommandsAffectWorkspaceSettingsInstead": {
+          "description": "As the name implies, any invoked commands would target workspace settings with this on.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.views.medalRequirementForUser": {
+          "description": "Amount of levels required to increase medal tier for main user level, in the user webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
+          "type": "number",
+          "default": 5
+        },
+        "code-levels.views.medalRequirementForUserLanguage": {
+          "description": "Amount of levels required to increase medal tier for each language level, in the user webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
+          "type": "number",
+          "default": 0
+        },
+        "code-levels.views.medalRequirementForWorkspace": {
+          "description": "Amount of levels required to increase medal tier for main workspace level, in the workspace webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
+          "type": "number",
+          "default": 0
+        },
+        "code-levels.views.medalRequirementForWorkspaceLanguage": {
+          "description": "Amount of levels required to increase medal tier for each language level, in the workspace webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
+          "type": "number",
+          "default": 0
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.73.0",
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "16.x",
+    "eslint": "^8.26.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.8.4",
+    "@vscode/test-electron": "^2.2.0"
+  }
+}
