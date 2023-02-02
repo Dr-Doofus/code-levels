@@ -11,6 +11,10 @@
   "activationEvents": [
     "onStartupFinished"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dr-Doofus/code-levels"
+  },
   "main": "./out/_main.min.js",
   "contributes": {
     "commands": [

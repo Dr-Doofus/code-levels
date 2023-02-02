@@ -4,6 +4,10 @@
 
 **NOTE:** The source code was uploaded here by request. As a hobby project, this code **_sucks_**. You have been warned. I am not held liable for any brain damage caused by looking at this.
 
+**NOTE 2 THE SEQUEL:** You may use the issue tracker to ask for support under any of the given labels. I will primarily only fix major bugs. I do however have plenty of time to add support for as many languages as possible, though I prefer to remain within the scope of VS Code Marketplace extensions. Please do give me the language identifier (i.e. **code-text-binary**, not just "Binary"), so it skips having to test it.
+
+~
+
 VS Code Levels (aka code-levels or clv) is an extension that counts how many times you've typed in files. It also helps visualizing it using an experience and level system.
 
 Technically, code-levels is a sequel to a previous extension, called vsc-levels.
@@ -75,6 +79,7 @@ This extension contributes the following settings:
 * `code-levels.tooltip.enableWorkspace`: Exactly the same as `code-levels.tooltip.enableUser` but targets the workspace instead.
 * `code-levels.tooltip.enableWorkspaceTotal`: Similar to `code-levels.tooltip.enableUserTotal` but for the workspace file.
 * `code-levels.tooltip.enableWorkspaceLanguage`: Similar to `code-levels.tooltip.enableUserLanguage` but for the workspace file instead.
+* `code-levels.tooltip.experienceSuffix`: Sets a specific text at the end of the final point value in each line that contains one.
 * `code-levels.user.name`: Pick the username. This is seen on the webview as well as used as the location on where the user file saves to. This allows multiple different users on the same machine. **UPON CHANGING THIS, THE EDITOR HAS TO BE RELOADED TO LOAD THE NEW USER FILE PROPERLY! THIS WILL CLOSE ANY DEBUG/RUN SESSIONS.**
 * `code-levels.user.tracking`: Enables or disables user file experience gain. The file will still be loaded and saved, but no experience will be given.
 * `code-levels.user.trackLanguage`: Enables or disables specific experience gain per language for the user. This is not dependent on `code-levels.user.tracking`.
