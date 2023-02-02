@@ -160,6 +160,9 @@ __To minimize the risk of data loss, before closing, save a file on the active i
 * Added convert from go.mod => go.
 * Added config option to replace text at the end of tooltip point values.
 
+## 1.1.1
+* Documentation hotfix.
+
 # Credits
 **DrDoofus**: Programming the extension in its entirety.  
 **Plasmawario**: Testing the extension in its early phase.  
