@@ -4,7 +4,7 @@
 
 **NOTE:** The source code was uploaded here by request. As a hobby project, this code **_sucks_**. You have been warned. I am not held liable for any brain damage caused by looking at this.
 
-**NOTE 2 THE SEQUEL:** You may use the issue tracker to ask for support under any of the given labels. I will primarily only fix major bugs. I do however have plenty of time to add support for as many languages as possible, though I prefer to remain within the scope of VS Code Marketplace extensions. Please do give me the language identifier (i.e. **code-text-binary**, not just "Binary"), so it skips having to test it.
+**NOTE 2 THE SEQUEL:** You may use the issue tracker to ask for support under any of the given labels. I will primarily only fix major bugs that negatively impact the usage experience. I do however have plenty of time to add support for as many languages as possible, though I prefer to remain within the scope of VS Code Marketplace extensions. Please do give me the language identifier (i.e. **code-text-binary**, not just "Binary"), so it skips having to test it.
 
 ~
 
