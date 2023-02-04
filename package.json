@@ -2,7 +2,7 @@
   "name": "code-levels",
   "displayName": "VS Code Levels",
   "description": "Adds various experience bars to track your coding progress",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "publisher": "DrDoofus",
   "engines": {
     "vscode": "^1.73.0"
@@ -392,6 +392,11 @@
           "description": "Amount of levels required to increase medal tier for each language level, in the workspace webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
           "type": "number",
           "default": 0
+        },
+        "code-levels.views.useAlternateStyle": {
+          "description": "Changes the styling in the webview to focus on bars instead of rings. Most noticeable while using languages.",
+          "type": "boolean",
+          "default": false
         }
       }
     }

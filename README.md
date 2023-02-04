@@ -95,6 +95,7 @@ This extension contributes the following settings:
 * `code-levels.views.medalRequirementForUserLanguage`: Same as `code-levels.views.medalRequirementForUser` but for each user language instead.
 * `code-levels.views.medalRequirementForWorkspace`: Same as `code-levels.views.medalRequirementForUser` but for the workspace/workspace profile instead.
 * `code-levels.views.medalRequirementForWorkspaceLanguage`: Same as `code-levels.views.medalRequirementForUserLanguage` but for each workspace language found in the workspace profile.
+`code-levels.views.useAlternateStyle`: Changes up the layout of the webview a little to utilize bars more.
 
 
 # Known Issues
@@ -163,7 +164,12 @@ __To minimize the risk of data loss, before closing, save a file on the active i
 ## 1.1.1
 * Documentation hotfix.
 
+## 1.2.0
+* Fixed an ancient CSS problem I never noticed would affect something.
+* New configuration setting `code-levels.views.useAlternateStyle` that switches up the layout to use more bars.
+
 # Credits
 **DrDoofus**: Programming the extension in its entirety.  
 **Plasmawario**: Testing the extension in its early phase.  
 **Artum**: Credited for absolutely no reason.
+And you, for actually noticing this extension.
