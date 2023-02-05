@@ -168,6 +168,9 @@ __To minimize the risk of data loss, before closing, save a file on the active i
 * Fixed an ancient CSS problem I never noticed would affect something.
 * New configuration setting `code-levels.views.useAlternateStyle` that switches up the layout to use more bars.
 
+## 1.2.1
+* Fixed a small CSS issue with alternative style.
+
 # Credits
 **DrDoofus**: Programming the extension in its entirety.  
 **Plasmawario**: Testing the extension in its early phase.  
