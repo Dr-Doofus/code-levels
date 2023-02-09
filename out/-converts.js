@@ -1,5 +1,6 @@
 const data = {
     "bibtex": "tex",
+    "c": "c",
     "code-text-binary": "plaintext",
     "cuda-cpp": "cpp",
     "diff": "plaintext",

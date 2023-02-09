@@ -5,8 +5,8 @@ const data = {
     //from vscode
     "bat": "Batch",
     "bibtex": "BibTeX",
-    "code-text-binary": "Binary",
     "c": "C",
+    "code-text-binary": "Binary",
     "csharp": "C#",
     "cpp": "C++",
     "clojure": "Clojure",
