@@ -253,6 +253,7 @@ function userUpdate() {
                     content += `<div lc><div lt>` + nameF + `</div><div lo><span>` + curr + `</span>` + next + `</div>`;
                     if (cfg.grades.enableForUserLanguage) {
                         let grd = grade.get(level, true);
+                        if (cfg.views.useAlternateStyle) grd = grade.get(level);
                         content += `<div lv><b>` + grd + `</b><span></span</div></div></div>`;
                     } else {
                         content += `<div lv>Lv. <span>` + level + `</span</div></div></div>`
@@ -514,6 +515,7 @@ function workspaceUpdate() {
                     content += `<div lc><div lt>` + nameF + `</div><div lo><span>` + curr + `</span>` + next + `</div>`;
                     if (cfg.grades.enableForWorkspaceLanguage) {
                         let grd = grade.get(level, true);
+                        if (cfg.views.useAlternateStyle) grd = grade.get(level);
                         content += `<div lv><b>` + grd + `</b><span></span</div></div></div>`;
                     } else {
                         content += `<div lv>Lv. <span>` + level + `</span</div></div></div>`

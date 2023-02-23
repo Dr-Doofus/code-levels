@@ -158,6 +158,9 @@ __To minimize the risk of data loss, before closing, save a file on the active i
 * **THIS UPDATE FIXES A SECURITY ISSUE.**
 * Fixed the webview name wrapping badly.
 
+## 1.3.2
+* Fixed an issue regarding newlines in grades with the alternate styles in the webview..
+
 # Credits
 **Dr-Doofus**: Programming the extension in its entirety.  
 **Plasmawario**: Testing the extension in its early phase.  
