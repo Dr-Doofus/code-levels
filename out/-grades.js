@@ -1,6 +1,9 @@
 const data = [
   //If you know how arrays work you can change the sequence here
   //btw, you can use \n and it'll newline in the language webview
+  
+  //DISALLOWED CHARACTERS
+  //<>"'\&
 
   /* 001 */ "G-", 
   /* 002 */ "G", 

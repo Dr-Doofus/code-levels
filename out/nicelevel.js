@@ -11,12 +11,13 @@ function get(level = 1, multiline = false) {
     if (index < 0) { output = "???"; return output;}
     //Get array data
     output = grd.data[index];
+    let output2 = output.replace(/[<>"'\\&]/g, ""); //make safe?
     //If you exhaust the grade data... 
     //just take the last index and slap a number on it
-    if (index >= grd.data.length) { output = grd.data[grd.data.length-1] + " + " (level - grd.data.length); }
+    if (index >= grd.data.length) { output2 = grd.data[grd.data.length-1] + " + " (level - grd.data.length); }
 
-    if (multiline === false) { result = output.replace("\n", ""); return result;}
-    if (multiline === true) { result = output.replace("\n", "<br>"); return result;}
+    if (multiline === false) { result = output2.replace("\n", ""); return result;}
+    if (multiline === true) { result = output2.replace("\n", "<br>"); return result;}
   }
   console.warn("CLV > Level format > Grade data not found.");
 }

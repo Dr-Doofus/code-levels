@@ -154,6 +154,10 @@ __To minimize the risk of data loss, before closing, save a file on the active i
 * Converted all configs to an integer to disallow decimals.
 * Changed the license because I suck at legal things.
 
+## 1.3.1
+* **THIS UPDATE FIXES A SECURITY ISSUE.**
+* Fixed the webview name wrapping badly.
+
 # Credits
 **Dr-Doofus**: Programming the extension in its entirety.  
 **Plasmawario**: Testing the extension in its early phase.  
