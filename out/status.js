@@ -6,6 +6,7 @@ const data = require('./data.min.js');
 const number = require('./number.min.js');
 const levels = require('./levels.min.js');
 const nlang = require('./nicelang.min.js');
+const grade = require('./nicelevel.min.js');
 
 //assign status bar item
 let status;
@@ -80,6 +81,7 @@ function refresh() {
         if (cfg.status.levelDisplayType == "Level (Type)") { levelMode = 3; }
         if (cfg.status.levelDisplayType == "Level (Short Type)") { levelMode = 4; }
         if (cfg.status.levelDisplayType == "Percentage") { levelMode = 5; }
+        if (cfg.status.levelDisplayType == "Grade") { levelMode = 6; }
     }
     //level % precision
     if (cfg.status.levelPercentPrecision) {
@@ -345,6 +347,11 @@ function update(value, language = false) {
             content += pctF;
             content += "%";
         }
+        // Display Level (Grade)
+        if (levelMode == 6 && level > 1) {
+            let lv = Math.min(level,cap);
+            content += grade.get(lv);
+        }
     }
 
     ///
@@ -373,9 +380,15 @@ function update(value, language = false) {
         if (cfg.tooltip.enableUser && data.usr && cfg.user.tracking) {
             //check requirements (the vars seem self-explanatory?)
             //level text
-            if (data.usr.lvl) {
+            if (data.usr.lvl && !cfg.grades.enableForUser) {
                 let lv = Math.min(data.usr.lvl,usrCap);
-                tip.value += `<b><u><code>User Lv. ` + String(lv) + `</code></u></b>`
+                tip.value += `<b><u><code>User Lv. ` + String(lv) + `</code></u></b>`;
+            }
+            //alt version in case grades are used
+            if (data.usr.lvl && cfg.grades.enableForUser) {
+                let lv = Math.min(data.usr.lvl,usrCap);
+                let grd = grade.get(lv);
+                tip.value += `<b><u><code>User (` + String(grd) + `)</code></u></b>`;
             }
             //exp text (+ total if enabled)
             if (data.usr.exp && data.usr.lvl) {
@@ -390,7 +403,11 @@ function update(value, language = false) {
                 let nextF = number.format(next-last, numberStyle, true);
                 let expTxt;
                 if (lv >= usrCap) {
-                    expTxt = "<b>MAX LEVEL</b>";
+                    if (cfg.grades.enableForUser) {
+                        expTxt = "<b>MAX</b>";
+                    } else {
+                        expTxt = "<b>MAX LEVEL</b>";
+                    }
                 } else {
                     expTxt = `<b>` + String(expF) + `</b> / ` + String(nextF) + expSuffix;
                 }
@@ -420,21 +437,33 @@ function update(value, language = false) {
                         }
                         let lang = nlang.prettify(language);
                         
-                        tip.value += `<br><i><b>` + lang + `</b> Lv. ` + String(lv) + ` (` + String(pct2) + `)</i>`;
+                        //custom grade text if it's enabled. Otherwise just show level.
+                        if (cfg.grades.enableForUserLanguage) {
+                            let grd = grade.get(lv);
+                            tip.value += `<br><i><b>` + lang + `</b> | ` + String(grd) + ` (` + String(pct2) + `)</i>`;
+                        } else {
+                            tip.value += `<br><i><b>` + lang + `</b> Lv. ` + String(lv) + ` (` + String(pct2) + `)</i>`;
+                        }
                     }
                 }
             }
         }
         //middle end (splits if both settings are enabled)
-        if (splitTooltip) { tip.value += `<br>═══════════════<br>` }
+        if (splitTooltip) { tip.value += `<br>════════════════════<br>` }
     
         //workspace end
         if (cfg.tooltip.enableWorkspace && data.wsp && cfg.workspace.tracking) {
             //check requirements (the vars seem self-explanatory?)
             //level text
-            if (data.wsp.lvl) {
+            if (data.wsp.lvl && !cfg.grades.enableForWorkspace) {
                 let lv = Math.min(data.wsp.lvl,wspCap);
                 tip.value += `<b><u><code>Workspace Lv. ` + String(lv) + `</code></u></b>`
+            }
+            //alt version in case grades are used
+            if (data.wsp.lvl && cfg.grades.enableForWorkspace) {
+                let lv = Math.min(data.wsp.lvl,wspCap);
+                let grd = grade.get(lv);
+                tip.value += `<b><u><code>Workspace (` + String(grd) + `)</code></u></b>`;
             }
             //exp text (+ total if enabled)
             if (data.wsp.exp && data.wsp.lvl) {
@@ -449,7 +478,11 @@ function update(value, language = false) {
                 let nextF = number.format(next-last, numberStyle, true);
                 let expTxt;
                 if (lv >= wspCap) {
-                    expTxt = "<b>MAX LEVEL</b>";
+                    if (cfg.grades.enableForWorkspace) {
+                        expTxt = "<b>MAX</b>";
+                    } else {
+                        expTxt = "<b>MAX LEVEL</b>";
+                    }
                 } else {
                     expTxt = `<b>` + String(expF) + `</b> / ` + String(nextF) + expSuffix;
                 }
@@ -479,7 +512,12 @@ function update(value, language = false) {
                         }
                         let lang = nlang.prettify(language);
                         
-                        tip.value += `<br><i><b>` + lang + `</b> Lv. ` + String(lv) + ` (` + String(pct2) + `)</i>`;
+                        if (cfg.grades.enableForWorkspaceLanguage) {
+                            let grd = grade.get(lv);
+                            tip.value += `<br><i><b>` + lang + `</b> | ` + String(grd) + ` (` + String(pct2) + `)</i>`;
+                        } else {
+                            tip.value += `<br><i><b>` + lang + `</b> Lv. ` + String(lv) + ` (` + String(pct2) + `)</i>`;
+                        }
                     }
                 }
             }
@@ -521,32 +559,39 @@ function bar(level, mod = 5, tExp, length = 10) {
 				case 0:
 					break;
 				case 1:
-					bar = bar + "▏";
 					remain--;
+                    if (cfg.status.verticalBarFill) { bar = bar + "▁"; break;}
+                    bar = bar + "▏";
 					break;
 				case 2:
-					bar = bar + "▎";
 					remain--;
+                    if (cfg.status.verticalBarFill) { bar = bar + "▂"; break;}
+					bar = bar + "▎";
 					break;
 				case 3:
-					bar = bar + "▍";
 					remain--;
+                    if (cfg.status.verticalBarFill) { bar = bar + "▃"; break;}
+					bar = bar + "▍";
 					break;
 				case 4:
-					bar = bar + "▌";
 					remain--;
+                    if (cfg.status.verticalBarFill) { bar = bar + "▄"; break;}
+					bar = bar + "▌";
 					break;
 				case 5:
-					bar = bar + "▋";
 					remain--;
+                    if (cfg.status.verticalBarFill) { bar = bar + "▅"; break;}
+					bar = bar + "▋";
 					break;
 				case 6:
-					bar = bar + "▊";
 					remain--;
+                    if (cfg.status.verticalBarFill) { bar = bar + "▆"; break;}
+					bar = bar + "▊";
 					break;
 				case 7:
-					bar = bar + "▉";
 					remain--;
+                    if (cfg.status.verticalBarFill) { bar = bar + "▇"; break;}
+					bar = bar + "▉";
 					break;
 			}
 			for (let i = 0; i < remain; i++) {

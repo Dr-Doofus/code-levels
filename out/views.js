@@ -7,6 +7,7 @@ const levels = require('./levels.min.js');
 const number = require('./number.min.js');
 const nlang = require('./nicelang.min.js');
 const conf = require('./config.min.js');
+const grade = require('./nicelevel.min.js');
 
 var viewU;
 var viewW;
@@ -57,7 +58,27 @@ function userUpdate() {
     //get date for last updated
     let date = new Date(Date.now());
     let time = date.toLocaleTimeString();
-    content += `<div gt>Last updated at ` + time + `</div><br>`;
+
+    //get mods (and make text based off of it)
+    let modU = "";
+    let modL = "";
+    let mcount = 0;
+    let modS = "";
+
+    if (cfg.user.levelMod != 10 && typeof cfg.user.levelMod == "number") {
+        mcount++;
+        modU = "User mod " + cfg.user.levelMod;
+    } 
+    if (cfg.user.levelModLanguage != 5 && typeof cfg.user.levelModLanguage == "number") {
+        mcount++;
+        modL = "Language mod " + cfg.user.levelModLanguage;
+    } 
+    if (mcount > 1) {
+        modS = ", "
+    }
+
+    //update timestamp
+    content += `<div gt>Last updated at ` + time + `. ` + modU + modS + modL + `</div><br>`;
 
     //user info (if it exists)
     if (data.usr) {
@@ -120,7 +141,8 @@ function userUpdate() {
             //get user medal setting and apply it if possible (requires level)
             if (cfg.views.medalRequirementForUser > 0 && level) {
                 let req = cfg.views.medalRequirementForUser;
-                let tier = Math.min(Math.floor(level/req),10);
+                let offset = cfg.views.medalOffsetForUser;
+                let tier = Math.min(Math.floor((level-offset)/req),10);
                 content += `<div mm t` + tier + `></div>`;
             }
             //set username in webview
@@ -128,7 +150,9 @@ function userUpdate() {
 
             //set level & exp
             if (level && exp) {
-                content += `<div ml>Level <span>` + level + `</span></div>`
+                //choose what to display based on grades being on or off
+                if (!cfg.grades.enableForUser) { content += `<div ml>Level <span>` + level + `</span></div>`; }
+                if (cfg.grades.enableForUser) { let grd = grade.get(level); content += `<div ml><span>` + grd + `</span></div>`;}
 
                 //set experience bar (start)
                 content += `<div mb><div me `;
@@ -189,7 +213,8 @@ function userUpdate() {
                     if (cfg.views.medalRequirementForUserLanguage > 0) {
                         mode = 2;
                         let req = cfg.views.medalRequirementForUserLanguage;
-                        tier = Math.min(Math.floor(level/req),10);
+                        let offset = cfg.views.medalOffsetForUserLanguage;
+                        tier = Math.min(Math.floor((level-offset)/req),10);
                     }
                     //make bar (this also determines the opening tag)
                     let bar = Math.min(levels.calculatePct(level, modLang, exp, 1), 100);
@@ -224,9 +249,14 @@ function userUpdate() {
                     }
                     let totalExp = number.format(exp, numFormat, true);
 
-                    //lc (text content)
+                    //lc (text content, changes if grades are enabled)
                     content += `<div lc><div lt>` + nameF + `</div><div lo><span>` + curr + `</span>` + next + `</div>`;
-                    content += `<div lv>Lv. <span>` + level + `</span</div></div></div>`
+                    if (cfg.grades.enableForUserLanguage) {
+                        let grd = grade.get(level, true);
+                        content += `<div lv><b>` + grd + `</b><span></span</div></div></div>`;
+                    } else {
+                        content += `<div lv>Lv. <span>` + level + `</span</div></div></div>`
+                    }
                     
                     //la content
                     content += `<div la><span>` + totalExp + `</span> total</div>`
@@ -291,9 +321,29 @@ function workspaceUpdate() {
     //get date for last updated
     let date = new Date(Date.now());
     let time = date.toLocaleTimeString();
-    content += `<div gt>Last updated at ` + time + `</div><br>`;
 
-    //user info (if it exists)
+    //get mods (and make text based off of it)
+    let modU = "";
+    let modL = "";
+    let mcount = 0;
+    let modS = "";
+    
+    if (cfg.workspace.levelMod != 10 && typeof cfg.workspace.levelMod == "number") {
+        mcount++;
+        modU = "Workspace mod " + cfg.workspace.levelMod;
+    } 
+    if (cfg.workspace.levelModLanguage != 5 && typeof cfg.workspace.levelModLanguage == "number") {
+        mcount++;
+        modL = "Language mod " + cfg.workspace.levelModLanguage;
+    } 
+    if (mcount > 1) {
+        modS = ", "
+    }
+    
+    //update timestamp
+    content += `<div gt>Last updated at ` + time + `. ` + modU + modS + modL + `</div><br>`;
+
+    //workspace info (if it exists)
     if (data.wsp) {
         //Get username (this is worked in both blocks. Saves writing twice.)
         let user = "Workspace";
@@ -353,7 +403,8 @@ function workspaceUpdate() {
             //get user medal setting and apply it if possible (requires level)
             if (cfg.views.medalRequirementForWorkspace > 0 && level) {
                 let req = cfg.views.medalRequirementForWorkspace;
-                let tier = Math.min(Math.floor(level/req),10);
+                let offset = cfg.views.medalOffsetForWorkspace;
+                let tier = Math.min(Math.floor((level-offset)/req),10);
                 content += `<div mm t` + tier + `></div>`;
             }
             //set username in webview
@@ -361,7 +412,9 @@ function workspaceUpdate() {
 
             //set level & exp
             if (level && exp) {
-                content += `<div ml>Level <span>` + level + `</span></div>`
+                //choose what to display based on grades being on or off
+                if (!cfg.grades.enableForWorkspace) { content += `<div ml>Level <span>` + level + `</span></div>`; }
+                if (cfg.grades.enableForWorkspace) { let grd = grade.get(level); content += `<div ml><span>` + grd + `</span></div>`;}
 
                 //set experience bar (start)
                 content += `<div mb><div me `;
@@ -394,7 +447,7 @@ function workspaceUpdate() {
         //Is that config setting enabled & does it exist?
         if (cfg.workspace.trackLanguage) {
             if (data.wsp.langs) {
-                            //configuration (taken from above thingy but altered)
+            //configuration (taken from above thingy but altered)
             //get level cap (if it exists)
             let cap = Infinity;
             if (cfg.caps.workspaceLanguage > 0) {
@@ -421,7 +474,8 @@ function workspaceUpdate() {
                     if (cfg.views.medalRequirementForWorkspaceLanguage > 0) {
                         mode = 2;
                         let req = cfg.views.medalRequirementForWorkspaceLanguage;
-                        tier = Math.min(Math.floor(level/req),10);
+                        let offset = cfg.views.medalOffsetForWorkspaceLanguage;
+                        tier = Math.min(Math.floor((level-offset)/req),10);
                     }
                     //make bar (this also determines the opening tag)
                     let bar = Math.min(levels.calculatePct(level, modLang, exp, 1), 100);
@@ -456,9 +510,14 @@ function workspaceUpdate() {
                     }
                     let totalExp = number.format(exp, numFormat, true);
 
-                    //lc (text content)
+                    //lc (text content - shows grade instead if enabled)
                     content += `<div lc><div lt>` + nameF + `</div><div lo><span>` + curr + `</span>` + next + `</div>`;
-                    content += `<div lv>Lv. <span>` + level + `</span</div></div></div>`
+                    if (cfg.grades.enableForWorkspaceLanguage) {
+                        let grd = grade.get(level, true);
+                        content += `<div lv><b>` + grd + `</b><span></span</div></div></div>`;
+                    } else {
+                        content += `<div lv>Lv. <span>` + level + `</span</div></div></div>`
+                    }
                     
                     //la content
                     content += `<div la><span>` + totalExp + `</span> total</div>`
@@ -491,10 +550,10 @@ function workspaceUpdate() {
 function coreStyle() {
     var css;
     if (cfg.views.useAlternateStyle) {
-        css += `:root{--m-bar:gray;--l-bar:maroon}div[gt]{opacity:.66;font-size:.85rem;margin-top:8px;position:absolute}div[mm]{background-color:rgba(255,255,255,.5);width:24px;height:24px;border:2px solid rgba(255,255,255,.5);left:24px;transform:rotate(45deg);margin-top:24px;position:absolute}div[mt]{font-size:1.5rem;margin-top:21px;font-weight:700;overflow:hidden;text-overflow:ellipsis;max-width:calc(min(451px,100%));margin-left:48px}div[ml]{margin-top:4px}div[ml] span{font-size:1.25rem;font-weight:700}div[mb]{width:calc(min(500px,100%));height:20px;background-color:rgba(0,0,0,.33);border-bottom:2px solid}div[me]{width:0%;background-color:var(--m-bar);height:20px}div[me][mx]{width:100%!important;background-image:var(--m-bar-max);height:20px}div[mv]{width:calc(min(500px,100%));font-size:.9rem;text-align:center}div[mv] span{font-size:1.1rem;font-weight:700}div[mc]{opacity:.66;font-size:.75rem}div[sp]{width:calc(min(500px,100%));height:20px;border-bottom:1px solid;margin-bottom:24px;opacity:.33}div[mm]{text-align:center}div[mm][tx]{opacity:0}div[mm][t0]{background-image:linear-gradient(-15deg,#000 33%,#222 66%,#000);opacity:.33;border-color:#000}div[mm][t1]{background-image:linear-gradient(-15deg,#f92 33%,#fc4 66%,#f92 100%);border-color:#d71}div[mm][t2]{background-image:linear-gradient(-15deg,#99a 20%,#bbc 40%,#eef 66%,#bbc 100%);border-color:#668}div[mm][t3]{background-image:linear-gradient(-15deg,#a84 20%,#db6 40%,#fed 66%,#db6 100%);border-color:#972}div[mm][t4]{background-image:linear-gradient(-15deg,#99f 20%,#ddf 40%,#fff 66%,#ddf 100%);border-color:#66b}div[mm][t5]{background-image:linear-gradient(-15deg,#090 15%,#4c4 30%,#4e4 45%,#afa 65%,#4e4 100%);border-color:#070;box-shadow:0 0 2px #0a0}div[mm][t6]{background-image:linear-gradient(-15deg,#924 15%,#b24 30%,#d24 45%,#e8a 65%,#d24 100%);border-color:#802;box-shadow:0 0 3px #904}div[mm][t7]{background-image:linear-gradient(-15deg,#a3c 15%,#b4e 30%,#e6f 45%,#faf 65%,#e6f 100%);border-color:#72b;box-shadow:0 0 4px #d0d}div[mm][t8]{background-image:linear-gradient(-15deg,#49c 15%,#7ae 30%,#aef 45%,#fff 65%,#aef 100%);border-color:#27a;box-shadow:0 0 5px #7cf}div[mm][t9]{background-image:linear-gradient(-15deg,#ccf 15%,#eef 30%,#fff 45%,#fdc 60%,#cfd 70%,#dcf 80%,#fff 95%,#ccf 100%);border-color:#acc;box-shadow:0 0 6px #dff}div[mm][t10]{background-image:linear-gradient(-15deg,#cff 10%,#fff 40%,#faa 50%,#fda 60%,#cfa 70%,#aff 80%,#daf 90%,#cff 100%);border-color:#acc;box-shadow:0 0 5px #faa;animation:sr-fx-m linear 3s infinite}@keyframes sr-fx-m{0%{box-shadow:0 0 5px #faa}14%{box-shadow:0 0 5.25px #fda}28%{box-shadow:0 0 5.5px #ffa}43%{box-shadow:0 0 6px #cfa}57%{box-shadow:0 0 5.66px #afc}71%{box-shadow:0 0 5.33px #aff}85%{box-shadow:0 0 5px #daf}}div[lp]{width:calc(min(496px,100%));margin-right:8px;margin-bottom:32px}div[l]{--p:0%;width:100%;height:68px;text-align:left;background-image:linear-gradient(to right,var(--l-bar) var(--p),rgba(0,0,0,.33) 0);display:block;background-repeat:no-repeat;background-position:0 52px;background-size:auto 16px}div[l][lx]{background-image:var(--l-bar-max)}div[lc]{width:100%;height:46px;position:relative;padding-top:22px;font-size:1.2em;background-color:rgba(0,0,0,.125);background-repeat:no-repeat;background-position:0 -16px}div[lt]{font-size:125%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;transform:translateY(-20px);height:1.4em;width:100%;margin-left:6px;font-weight:700}div[lo]{font-size:50%;text-align:right;color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.75);transform:translate(-2px,4px)}div[lo] span{font-weight:700;font-size:133%}div[lv]{font-size:80%;transform:translate(2px,-34px)}div[lv] span{font-size:120%;font-weight:700}div[la]{text-align:center;width:calc(min(496px,100%));font-size:.85rem;opacity:.66;margin-top:2px;margin-bottom:25px}div[la] span{font-weight:700;font-size:.9rem;margin-left:8px}div[l][tx]{background-color:var(--vscode-editor-background)}div[l][t0] div[lc]{background-image:linear-gradient(20deg,#112 33%,#334 66%,#112);color:#ddf}div[l][t1] div[lc]{background-image:linear-gradient(20deg,#f92 33%,#fc4 66%,#f92 100%);color:#930}div[l][t2] div[lc]{background-image:linear-gradient(20deg,#99a 20%,#bbc 40%,#eef 66%,#bbc 100%);color:#556}div[l][t3] div[lc]{background-image:linear-gradient(20deg,#a84 20%,#db6 40%,#fed 66%,#db6 100%);color:#651}div[l][t4] div[lc]{background-image:linear-gradient(20deg,#99f 20%,#ddf 40%,#fff 66%,#ddf 100%);color:#55b}div[l][t5]{box-shadow:0 0 4px #0a0}div[l][t5] div[lc]{background-image:linear-gradient(20deg,#090 15%,#4c4 30%,#4e4 45%,#afa 65%,#4e4 100%);color:#060}div[l][t6]{box-shadow:0 0 8px #904}div[l][t6] div[lc]{background-image:linear-gradient(20deg,#924 15%,#b24 30%,#d24 45%,#e8a 65%,#d24 100%);color:#601}div[l][t7]{box-shadow:0 0 9px #d0d}div[l][t7] div[lc]{background-image:linear-gradient(20deg,#a3c 15%,#b4e 30%,#e6f 45%,#faf 65%,#e6f 100%);color:#606}div[l][t8]{box-shadow:0 0 10px #7cf}div[l][t8] div[lc]{background-image:linear-gradient(20deg,#49c 15%,#7ae 30%,#aef 45%,#fff 65%,#aef 100%);color:#068}div[l][t9]{box-shadow:0 0 11px #dff}div[l][t9] div[lc]{background-image:linear-gradient(20deg,#ccf 15%,#eef 30%,#fff 45%,#fdc 60%,#cfd 70%,#dcf 80%,#fff 95%,#ccf 100%);color:#488}div[l][t10]{box-shadow:0 0 9px #faa;animation:sr-fx-l linear 3s infinite}div[l][t10] div[lc]{background-image:linear-gradient(20deg,#cff 5%,#fff 50%,#faa 55%,#fda 60%,#cfa 65%,#aff 70%,#daf 75%,#fff 80%,#cff 100%);color:#577}@keyframes sr-fx-l{0%{box-shadow:0 0 9px #faa}14%{box-shadow:0 0 10px #fda}28%{box-shadow:0 0 11px #ffa}43%{box-shadow:0 0 12px #cfa}57%{box-shadow:0 0 12px #afc}71%{box-shadow:0 0 11px #aff}85%{box-shadow:0 0 10px #daf}}div[wn]{color:rgba(255,64,64,.5);font-size:.75rem;font-weight:700}div[cn]{display:flex;flex-wrap:wrap}`;
+        css += `:root{--m-bar:gray;--l-bar:maroon}div[gt]{opacity:.66;font-size:.85rem;margin-top:8px;position:absolute}div[mm]{background-color:rgba(255,255,255,.5);width:24px;height:24px;border:2px solid rgba(255,255,255,.5);left:24px;transform:rotate(45deg);margin-top:24px;position:absolute}div[mt]{font-size:1.5rem;margin-top:21px;font-weight:700;overflow:hidden;text-overflow:ellipsis;max-width:calc(min(451px,100%));margin-left:48px}div[ml]{margin-top:4px}div[ml] span{font-size:1.25rem;font-weight:700}div[mb]{width:calc(min(500px,100%));height:20px;background-color:rgba(0,0,0,.33);border-bottom:2px solid}div[me]{width:0%;background-color:var(--m-bar);height:20px}div[me][mx]{width:100%!important;background-image:var(--m-bar-max);height:20px}div[mv]{width:calc(min(500px,100%));font-size:.9rem;text-align:center}div[mv] span{font-size:1.1rem;font-weight:700}div[mc]{opacity:.66;font-size:.75rem}div[sp]{width:calc(min(500px,100%));height:20px;border-bottom:1px solid;margin-bottom:24px;opacity:.33}div[mm]{text-align:center}div[mm][tx]{opacity:0}div[mm][t0]{background-image:linear-gradient(-15deg,#000 33%,#222 66%,#000);opacity:.33;border-color:#000}div[mm][t1]{background-image:linear-gradient(-15deg,#f92 33%,#fc4 66%,#f92 100%);border-color:#d71}div[mm][t2]{background-image:linear-gradient(-15deg,#99a 20%,#bbc 40%,#eef 66%,#bbc 100%);border-color:#668}div[mm][t3]{background-image:linear-gradient(-15deg,#a84 20%,#db6 40%,#fed 66%,#db6 100%);border-color:#972}div[mm][t4]{background-image:linear-gradient(-15deg,#99f 20%,#ddf 40%,#fff 66%,#ddf 100%);border-color:#66b}div[mm][t5]{background-image:linear-gradient(-15deg,#090 15%,#4c4 30%,#4e4 45%,#afa 65%,#4e4 100%);border-color:#070;box-shadow:0 0 2px #0a0}div[mm][t6]{background-image:linear-gradient(-15deg,#924 15%,#b24 30%,#d24 45%,#e8a 65%,#d24 100%);border-color:#802;box-shadow:0 0 3px #904}div[mm][t7]{background-image:linear-gradient(-15deg,#a3c 15%,#b4e 30%,#e6f 45%,#faf 65%,#e6f 100%);border-color:#72b;box-shadow:0 0 4px #d0d}div[mm][t8]{background-image:linear-gradient(-15deg,#49c 15%,#7ae 30%,#aef 45%,#fff 65%,#aef 100%);border-color:#27a;box-shadow:0 0 5px #7cf}div[mm][t9]{background-image:linear-gradient(-15deg,#ccf 15%,#eef 30%,#fff 45%,#fdc 60%,#cfd 70%,#dcf 80%,#fff 95%,#ccf 100%);border-color:#acc;box-shadow:0 0 6px #dff}div[mm][t10]{background-image:linear-gradient(-15deg,#cff 10%,#fff 40%,#faa 50%,#fda 60%,#cfa 70%,#aff 80%,#daf 90%,#cff 100%);border-color:#acc;box-shadow:0 0 5px #faa;animation:sr-fx-m linear 3s infinite}@keyframes sr-fx-m{0%{box-shadow:0 0 5px #faa}14%{box-shadow:0 0 5.25px #fda}28%{box-shadow:0 0 5.5px #ffa}43%{box-shadow:0 0 6px #cfa}57%{box-shadow:0 0 5.66px #afc}71%{box-shadow:0 0 5.33px #aff}85%{box-shadow:0 0 5px #daf}}div[lp]{width:calc(min(496px,100%));margin-right:8px;margin-bottom:32px}div[l]{--p:0%;width:100%;height:68px;text-align:left;background-image:linear-gradient(to right,var(--l-bar) var(--p),rgba(0,0,0,.33) 0);display:block;background-repeat:no-repeat;background-position:0 52px;background-size:auto 16px}div[l][lx]{background-image:var(--l-bar-max)}div[lc]{width:100%;height:46px;position:relative;padding-top:22px;font-size:1.2em;background-color:rgba(0,0,0,.125);background-repeat:no-repeat;background-position:0 -16px}div[lt]{font-size:125%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;transform:translateY(-20px);height:1.4em;width:100%;margin-left:6px;font-weight:700}div[lo]{font-size:50%;text-align:right;color:#fff;text-shadow:1px 1px 0 rgba(0,0,0,.75);transform:translate(-2px,4px)}div[lo] span{font-weight:700;font-size:133%}div[lv]{line-height:15px;font-size:80%;transform:translate(2px,-34px)}div[lv] span{font-size:120%;font-weight:700}div[la]{text-align:center;width:calc(min(496px,100%));font-size:.85rem;opacity:.66;margin-top:2px;margin-bottom:25px}div[la] span{font-weight:700;font-size:.9rem;margin-left:8px}div[l][tx]{background-color:var(--vscode-editor-background)}div[l][t0] div[lc]{background-image:linear-gradient(20deg,#112 33%,#334 66%,#112);color:#ddf}div[l][t1] div[lc]{background-image:linear-gradient(20deg,#f92 33%,#fc4 66%,#f92 100%);color:#930}div[l][t2] div[lc]{background-image:linear-gradient(20deg,#99a 20%,#bbc 40%,#eef 66%,#bbc 100%);color:#556}div[l][t3] div[lc]{background-image:linear-gradient(20deg,#a84 20%,#db6 40%,#fed 66%,#db6 100%);color:#651}div[l][t4] div[lc]{background-image:linear-gradient(20deg,#99f 20%,#ddf 40%,#fff 66%,#ddf 100%);color:#55b}div[l][t5]{box-shadow:0 0 4px #0a0}div[l][t5] div[lc]{background-image:linear-gradient(20deg,#090 15%,#4c4 30%,#4e4 45%,#afa 65%,#4e4 100%);color:#060}div[l][t6]{box-shadow:0 0 8px #904}div[l][t6] div[lc]{background-image:linear-gradient(20deg,#924 15%,#b24 30%,#d24 45%,#e8a 65%,#d24 100%);color:#601}div[l][t7]{box-shadow:0 0 9px #d0d}div[l][t7] div[lc]{background-image:linear-gradient(20deg,#a3c 15%,#b4e 30%,#e6f 45%,#faf 65%,#e6f 100%);color:#606}div[l][t8]{box-shadow:0 0 10px #7cf}div[l][t8] div[lc]{background-image:linear-gradient(20deg,#49c 15%,#7ae 30%,#aef 45%,#fff 65%,#aef 100%);color:#068}div[l][t9]{box-shadow:0 0 11px #dff}div[l][t9] div[lc]{background-image:linear-gradient(20deg,#ccf 15%,#eef 30%,#fff 45%,#fdc 60%,#cfd 70%,#dcf 80%,#fff 95%,#ccf 100%);color:#488}div[l][t10]{box-shadow:0 0 9px #faa;animation:sr-fx-l linear 3s infinite}div[l][t10] div[lc]{background-image:linear-gradient(20deg,#cff 5%,#fff 50%,#faa 55%,#fda 60%,#cfa 65%,#aff 70%,#daf 75%,#fff 80%,#cff 100%);color:#577}@keyframes sr-fx-l{0%{box-shadow:0 0 9px #faa}14%{box-shadow:0 0 10px #fda}28%{box-shadow:0 0 11px #ffa}43%{box-shadow:0 0 12px #cfa}57%{box-shadow:0 0 12px #afc}71%{box-shadow:0 0 11px #aff}85%{box-shadow:0 0 10px #daf}}div[wn]{color:rgba(255,64,64,.5);font-size:.75rem;font-weight:700}div[cn]{display:flex;flex-wrap:wrap}`;
         return css;
     }
-    css += `:root{--m-bar:gray;--l-bar:maroon}div[gt]{opacity:.66;font-size:.85rem;margin-top:8px;position:absolute}div[mm]{background-color:rgba(255,255,255,.5);width:24px;height:24px;border:2px solid rgba(255,255,255,.5);left:24px;transform:rotate(45deg);margin-top:24px;position:absolute}div[mt]{font-size:1.5rem;margin-top:21px;font-weight:700;overflow:hidden;text-overflow:ellipsis;max-width:calc(min(451px,100%));margin-left:48px}div[ml]{margin-top:4px}div[ml] span{font-size:1.25rem;font-weight:700}div[mb]{width:calc(min(500px,100%));height:20px;background-color:rgba(0,0,0,.33);border-bottom:2px solid}div[me]{width:0%;background-color:var(--m-bar);height:20px}div[me][mx]{width:100%!important;background-image:var(--m-bar-max);height:20px}div[mv]{width:calc(min(500px,100%));font-size:.9rem;text-align:right}div[mv] span{font-size:1.1rem;font-weight:700}div[mc]{opacity:.66;font-size:.75rem}div[sp]{width:calc(min(500px,100%));height:20px;border-bottom:1px solid;margin-bottom:24px;opacity:.33}div[mm]{text-align:center}div[mm][tx]{opacity:0}div[mm][t0]{background-image:linear-gradient(-15deg,#000 33%,#222 66%,#000);opacity:.33;border-color:#000}div[mm][t1]{background-image:linear-gradient(-15deg,#f92 33%,#fc4 66%,#f92 100%);border-color:#d71}div[mm][t2]{background-image:linear-gradient(-15deg,#99a 20%,#bbc 40%,#eef 66%,#bbc 100%);border-color:#668}div[mm][t3]{background-image:linear-gradient(-15deg,#a84 20%,#db6 40%,#fed 66%,#db6 100%);border-color:#972}div[mm][t4]{background-image:linear-gradient(-15deg,#99f 20%,#ddf 40%,#fff 66%,#ddf 100%);border-color:#66b}div[mm][t5]{background-image:linear-gradient(-15deg,#090 15%,#4c4 30%,#4e4 45%,#afa 65%,#4e4 100%);border-color:#070;box-shadow:0 0 2px #0a0}div[mm][t6]{background-image:linear-gradient(-15deg,#924 15%,#b24 30%,#d24 45%,#e8a 65%,#d24 100%);border-color:#802;box-shadow:0 0 3px #904}div[mm][t7]{background-image:linear-gradient(-15deg,#a3c 15%,#b4e 30%,#e6f 45%,#faf 65%,#e6f 100%);border-color:#72b;box-shadow:0 0 4px #d0d}div[mm][t8]{background-image:linear-gradient(-15deg,#49c 15%,#7ae 30%,#aef 45%,#fff 65%,#aef 100%);border-color:#27a;box-shadow:0 0 5px #7cf}div[mm][t9]{background-image:linear-gradient(-15deg,#ccf 15%,#eef 30%,#fff 45%,#fdc 60%,#cfd 70%,#dcf 80%,#fff 95%,#ccf 100%);border-color:#acc;box-shadow:0 0 6px #dff}div[mm][t10]{background-image:linear-gradient(-15deg,#cff 10%,#fff 40%,#faa 50%,#fda 60%,#cfa 70%,#aff 80%,#daf 90%,#cff 100%);border-color:#acc;box-shadow:0 0 5px #faa;animation:sr-fx-m linear 3s infinite}@keyframes sr-fx-m{0%{box-shadow:0 0 5px #faa}14%{box-shadow:0 0 5.25px #fda}28%{box-shadow:0 0 5.5px #ffa}43%{box-shadow:0 0 6px #cfa}57%{box-shadow:0 0 5.66px #afc}71%{box-shadow:0 0 5.33px #aff}85%{box-shadow:0 0 5px #daf}}div[lp]{margin-bottom:20px}div[l]{--p:0%;width:128px;height:128px;border-radius:100%;margin:4px;text-align:center;background-image:conic-gradient(var(--l-bar) var(--p),rgba(0,0,0,.33) 0);display:block}div[l][lx]{background-image:var(--l-bar-max)}div[lc]{width:112px;height:90px;position:relative;padding-top:22px;font-size:1.2em;left:8px;top:8px;background-color:var(--vscode-editor-background);border-radius:100%}div[lt]{overflow:hidden;font-size:95%;text-overflow:ellipsis;height:2.8em;width:98px;margin-left:6px;border-radius:8px;font-weight:700}div[lo]{font-size:50%}div[lo] span{font-weight:700;font-size:133%}div[lv]{font-size:80%}div[lv] span{font-size:120%;font-weight:700}div[la]{text-align:center;width:128px;font-size:.85rem;opacity:.66;margin-top:20px;margin-bottom:8px}div[la] span{font-weight:700;font-size:.9rem;margin-left:8px}div[l][tx]{background-color:var(--vscode-editor-background);margin:4px}div[l][t0] div[lc]{background-image:linear-gradient(20deg,#112 33%,#334 66%,#112);color:#ddf}div[l][t1] div[lc]{background-image:linear-gradient(20deg,#f92 33%,#fc4 66%,#f92 100%);color:#930}div[l][t2] div[lc]{background-image:linear-gradient(20deg,#99a 20%,#bbc 40%,#eef 66%,#bbc 100%);color:#556}div[l][t3] div[lc]{background-image:linear-gradient(20deg,#a84 20%,#db6 40%,#fed 66%,#db6 100%);color:#651}div[l][t4] div[lc]{background-image:linear-gradient(20deg,#99f 20%,#ddf 40%,#fff 66%,#ddf 100%);color:#55b}div[l][t5]{box-shadow:0 0 4px #0a0}div[l][t5] div[lc]{background-image:linear-gradient(20deg,#090 15%,#4c4 30%,#4e4 45%,#afa 65%,#4e4 100%);color:#060}div[l][t6]{box-shadow:0 0 8px #904}div[l][t6] div[lc]{background-image:linear-gradient(20deg,#924 15%,#b24 30%,#d24 45%,#e8a 65%,#d24 100%);color:#601}div[l][t7]{box-shadow:0 0 9px #d0d}div[l][t7] div[lc]{background-image:linear-gradient(20deg,#a3c 15%,#b4e 30%,#e6f 45%,#faf 65%,#e6f 100%);color:#606}div[l][t8]{box-shadow:0 0 10px #7cf}div[l][t8] div[lc]{background-image:linear-gradient(20deg,#49c 15%,#7ae 30%,#aef 45%,#fff 65%,#aef 100%);color:#068}div[l][t9]{box-shadow:0 0 11px #dff}div[l][t9] div[lc]{background-image:linear-gradient(20deg,#ccf 15%,#eef 30%,#fff 45%,#fdc 60%,#cfd 70%,#dcf 80%,#fff 95%,#ccf 100%);color:#488}div[l][t10]{box-shadow:0 0 9px #faa;animation:sr-fx-l linear 3s infinite}div[l][t10] div[lc]{background-image:linear-gradient(20deg,#cff 5%,#fff 50%,#faa 55%,#fda 60%,#cfa 65%,#aff 70%,#daf 75%,#fff 80%,#cff 100%);color:#577}@keyframes sr-fx-l{0%{box-shadow:0 0 9px #faa}14%{box-shadow:0 0 10px #fda}28%{box-shadow:0 0 11px #ffa}43%{box-shadow:0 0 12px #cfa}57%{box-shadow:0 0 12px #afc}71%{box-shadow:0 0 11px #aff}85%{box-shadow:0 0 10px #daf}}div[wn]{color:rgba(255,64,64,.5);font-size:.75rem;font-weight:700}div[cn]{display:flex;flex-wrap:wrap}`;
+    css += `:root{--m-bar:gray;--l-bar:maroon}div[gt]{opacity:.66;font-size:.85rem;margin-top:8px;position:absolute}div[mm]{background-color:rgba(255,255,255,.5);width:24px;height:24px;border:2px solid rgba(255,255,255,.5);left:24px;transform:rotate(45deg);margin-top:24px;position:absolute}div[mt]{font-size:1.5rem;margin-top:21px;font-weight:700;overflow:hidden;text-overflow:ellipsis;max-width:calc(min(451px,100%));margin-left:48px}div[ml]{margin-top:4px}div[ml] span{font-size:1.25rem;font-weight:700}div[mb]{width:calc(min(500px,100%));height:20px;background-color:rgba(0,0,0,.33);border-bottom:2px solid}div[me]{width:0%;background-color:var(--m-bar);height:20px}div[me][mx]{width:100%!important;background-image:var(--m-bar-max);height:20px}div[mv]{width:calc(min(500px,100%));font-size:.9rem;text-align:right}div[mv] span{font-size:1.1rem;font-weight:700}div[mc]{opacity:.66;font-size:.75rem}div[sp]{width:calc(min(500px,100%));height:20px;border-bottom:1px solid;margin-bottom:24px;opacity:.33}div[mm]{text-align:center}div[mm][tx]{opacity:0}div[mm][t0]{background-image:linear-gradient(-15deg,#000 33%,#222 66%,#000);opacity:.33;border-color:#000}div[mm][t1]{background-image:linear-gradient(-15deg,#f92 33%,#fc4 66%,#f92 100%);border-color:#d71}div[mm][t2]{background-image:linear-gradient(-15deg,#99a 20%,#bbc 40%,#eef 66%,#bbc 100%);border-color:#668}div[mm][t3]{background-image:linear-gradient(-15deg,#a84 20%,#db6 40%,#fed 66%,#db6 100%);border-color:#972}div[mm][t4]{background-image:linear-gradient(-15deg,#99f 20%,#ddf 40%,#fff 66%,#ddf 100%);border-color:#66b}div[mm][t5]{background-image:linear-gradient(-15deg,#090 15%,#4c4 30%,#4e4 45%,#afa 65%,#4e4 100%);border-color:#070;box-shadow:0 0 2px #0a0}div[mm][t6]{background-image:linear-gradient(-15deg,#924 15%,#b24 30%,#d24 45%,#e8a 65%,#d24 100%);border-color:#802;box-shadow:0 0 3px #904}div[mm][t7]{background-image:linear-gradient(-15deg,#a3c 15%,#b4e 30%,#e6f 45%,#faf 65%,#e6f 100%);border-color:#72b;box-shadow:0 0 4px #d0d}div[mm][t8]{background-image:linear-gradient(-15deg,#49c 15%,#7ae 30%,#aef 45%,#fff 65%,#aef 100%);border-color:#27a;box-shadow:0 0 5px #7cf}div[mm][t9]{background-image:linear-gradient(-15deg,#ccf 15%,#eef 30%,#fff 45%,#fdc 60%,#cfd 70%,#dcf 80%,#fff 95%,#ccf 100%);border-color:#acc;box-shadow:0 0 6px #dff}div[mm][t10]{background-image:linear-gradient(-15deg,#cff 10%,#fff 40%,#faa 50%,#fda 60%,#cfa 70%,#aff 80%,#daf 90%,#cff 100%);border-color:#acc;box-shadow:0 0 5px #faa;animation:sr-fx-m linear 3s infinite}@keyframes sr-fx-m{0%{box-shadow:0 0 5px #faa}14%{box-shadow:0 0 5.25px #fda}28%{box-shadow:0 0 5.5px #ffa}43%{box-shadow:0 0 6px #cfa}57%{box-shadow:0 0 5.66px #afc}71%{box-shadow:0 0 5.33px #aff}85%{box-shadow:0 0 5px #daf}}div[lp]{margin-bottom:20px}div[l]{--p:0%;width:128px;height:128px;border-radius:100%;margin:4px;text-align:center;background-image:conic-gradient(var(--l-bar) var(--p),rgba(0,0,0,.33) 0);display:block}div[l][lx]{background-image:var(--l-bar-max)}div[lc]{width:112px;height:90px;position:relative;padding-top:22px;font-size:1.2em;left:8px;top:8px;background-color:var(--vscode-editor-background);border-radius:100%}div[lt]{overflow:hidden;font-size:95%;text-overflow:ellipsis;height:2.8em;width:98px;margin-left:6px;border-radius:8px;font-weight:700}div[lo]{font-size:50%}div[lo] span{font-weight:700;font-size:133%}div[lv]{line-height:15px;font-size:80%}div[lv] span{font-size:120%;font-weight:700}div[la]{text-align:center;width:128px;font-size:.85rem;opacity:.66;margin-top:20px;margin-bottom:8px}div[la] span{font-weight:700;font-size:.9rem;margin-left:8px}div[l][tx]{background-color:var(--vscode-editor-background);margin:4px}div[l][t0] div[lc]{background-image:linear-gradient(20deg,#112 33%,#334 66%,#112);color:#ddf}div[l][t1] div[lc]{background-image:linear-gradient(20deg,#f92 33%,#fc4 66%,#f92 100%);color:#930}div[l][t2] div[lc]{background-image:linear-gradient(20deg,#99a 20%,#bbc 40%,#eef 66%,#bbc 100%);color:#556}div[l][t3] div[lc]{background-image:linear-gradient(20deg,#a84 20%,#db6 40%,#fed 66%,#db6 100%);color:#651}div[l][t4] div[lc]{background-image:linear-gradient(20deg,#99f 20%,#ddf 40%,#fff 66%,#ddf 100%);color:#55b}div[l][t5]{box-shadow:0 0 4px #0a0}div[l][t5] div[lc]{background-image:linear-gradient(20deg,#090 15%,#4c4 30%,#4e4 45%,#afa 65%,#4e4 100%);color:#060}div[l][t6]{box-shadow:0 0 8px #904}div[l][t6] div[lc]{background-image:linear-gradient(20deg,#924 15%,#b24 30%,#d24 45%,#e8a 65%,#d24 100%);color:#601}div[l][t7]{box-shadow:0 0 9px #d0d}div[l][t7] div[lc]{background-image:linear-gradient(20deg,#a3c 15%,#b4e 30%,#e6f 45%,#faf 65%,#e6f 100%);color:#606}div[l][t8]{box-shadow:0 0 10px #7cf}div[l][t8] div[lc]{background-image:linear-gradient(20deg,#49c 15%,#7ae 30%,#aef 45%,#fff 65%,#aef 100%);color:#068}div[l][t9]{box-shadow:0 0 11px #dff}div[l][t9] div[lc]{background-image:linear-gradient(20deg,#ccf 15%,#eef 30%,#fff 45%,#fdc 60%,#cfd 70%,#dcf 80%,#fff 95%,#ccf 100%);color:#488}div[l][t10]{box-shadow:0 0 9px #faa;animation:sr-fx-l linear 3s infinite}div[l][t10] div[lc]{background-image:linear-gradient(20deg,#cff 5%,#fff 50%,#faa 55%,#fda 60%,#cfa 65%,#aff 70%,#daf 75%,#fff 80%,#cff 100%);color:#577}@keyframes sr-fx-l{0%{box-shadow:0 0 9px #faa}14%{box-shadow:0 0 10px #fda}28%{box-shadow:0 0 11px #ffa}43%{box-shadow:0 0 12px #cfa}57%{box-shadow:0 0 12px #afc}71%{box-shadow:0 0 11px #aff}85%{box-shadow:0 0 10px #daf}}div[wn]{color:rgba(255,64,64,.5);font-size:.75rem;font-weight:700}div[cn]{display:flex;flex-wrap:wrap}`;
     return css;
 }
 

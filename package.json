@@ -2,7 +2,7 @@
   "name": "code-levels",
   "displayName": "VS Code Levels",
   "description": "Adds various experience bars to track your coding progress",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "publisher": "DrDoofus",
   "engines": {
     "vscode": "^1.73.0"
@@ -106,27 +106,47 @@
       "properties": {
         "code-levels.caps.mainUser": {
           "description": "Limits the display of user level on the tooltip, status bar and webview to this amount. Any number lower than 1 means no cap.",
-          "type": "number",
+          "type": "integer",
           "default": 0,
           "scope": "application"
         },
         "code-levels.caps.mainWorkspace": {
           "description": "Limits the display of workspace level on the tooltip, status bar and webview to this amount. Any number lower than 1 means no cap.",
-          "type": "number",
+          "type": "integer",
           "default": 0,
           "scope": "application"
         },
         "code-levels.caps.userLanguage": {
           "description": "Limits the display of user language level on the tooltip, status bar and webview to this amount. Any number lower than 1 means no cap.",
-          "type": "number",
+          "type": "integer",
           "default": 0,
           "scope": "application"
         },
         "code-levels.caps.workspaceLanguage": {
           "description": "Limits the display of workspace language level on the tooltip, status bar and webview to this amount. Any number lower than 1 means no cap.",
-          "type": "number",
+          "type": "integer",
           "default": 0,
           "scope": "application"
+        },
+        "code-levels.grades.enableForUser": {
+          "description": "Translates levels to grades (i.e. Lv16 = B+) for the user level.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.grades.enableForUserLanguage": {
+          "description": "Translates levels to grades (i.e. Lv16 = B+) for the user language level.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.grades.enableForWorkspace": {
+          "description": "Translates levels to grades (i.e. Lv16 = B+) for the workspace level.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.grades.enableForWorkspaceLanguage": {
+          "description": "Translates levels to grades (i.e. Lv16 = B+) for the workspace language level.",
+          "type": "boolean",
+          "default": false
         },
         "code-levels.status.advancedBar": {
           "description": "When enabled, replaces the simplistic bar with a more precise one. Causes the bar to shift around in width slightly, however.",
@@ -150,7 +170,7 @@
         },
         "code-levels.status.displayPercentPrecision": {
           "description": "If Display Progress is set to Percent, this setting changes its precision in decimals + 1.",
-          "type": "number",
+          "type": "integer",
           "default": 3,
           "enum": [
             1,
@@ -167,14 +187,14 @@
         },
         "code-levels.status.displayBarLength": {
           "description": "Experience bar length (in blocks)",
-          "type": "number",
+          "type": "integer",
           "default": 10,
           "minimum": 1,
           "maximum": 50
         },
         "code-levels.status.displayExperienceType": {
           "description": "Choose which experience type/level gets shown. Also affects on click view.",
-          "type": "number",
+          "type": "integer",
           "default": 1,
           "enum": [
             1,
@@ -199,7 +219,8 @@
             "Level (Short)",
             "Level (Type)",
             "Level (Short Type)",
-            "Percentage"
+            "Percentage",
+            "Grade"
           ],
           "enumDescriptions": [
             "",
@@ -207,12 +228,13 @@
             "3",
             "ULv3 / WLv3 / ULL3",
             "U3 / W3 / u3",
-            "72%"
+            "72%",
+            "G+ (ignores Show Grade setting)"
           ]
         },
         "code-levels.status.levelPercentPrecision": {
           "description": "If Level Display Type is set to Percentage, this setting changes its precision in decimals + 1.",
-          "type": "number",
+          "type": "integer",
           "default": 1,
           "enum": [
             1,
@@ -240,6 +262,11 @@
             "^",
             "↑"
           ]
+        },
+        "code-levels.status.verticalBarFill": {
+          "description": "(Only works if Advanced Bar is enabled!) Changes each bar to fill vertically instead of horizontally.",
+          "type": "boolean",
+          "default": false
         },
         "code-levels.tooltip.enableTooltip": {
           "description": "This setting enables or disables the tooltip in its entirety.",
@@ -319,14 +346,14 @@
         },
         "code-levels.user.levelMod": {
           "markdownDescription": "Recommended value is 2x user language mod. The higher the value, the harder it is to increase user level. **Forces a level recalculation if changed.**",
-          "type": "number",
+          "type": "integer",
           "default": 10,
           "minimum": 1,
           "scope": "application"
         },
         "code-levels.user.levelModLanguage": {
           "markdownDescription": "Recommended value is 0.5x user mod. The higher the value, the harder it is to increase user language level. **Forces a level recalculation if changed.**",
-          "type": "number",
+          "type": "integer",
           "default": 5,
           "minimum": 1,
           "scope": "application"
@@ -343,14 +370,14 @@
         },
         "code-levels.workspace.levelMod": {
           "markdownDescription": "Recommended value is 2x workspace language mod. The higher the value, the harder it is to increase workspace level. **Forces a level recalculation if changed.**",
-          "type": "number",
+          "type": "integer",
           "default": 10,
           "minimum": 1,
           "scope": "application"
         },
         "code-levels.workspace.levelModLanguage": {
           "markdownDescription": "Recommended value is 0.5x workspace mod. The higher the value, the harder it is to increase workspace language level. **Forces a level recalculation if changed.**",
-          "type": "number",
+          "type": "integer",
           "default": 5,
           "minimum": 1,
           "scope": "application"
@@ -375,23 +402,43 @@
         },
         "code-levels.views.medalRequirementForUser": {
           "description": "Amount of levels required to increase medal tier for main user level, in the user webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
-          "type": "number",
+          "type": "integer",
           "default": 5
         },
         "code-levels.views.medalRequirementForUserLanguage": {
           "description": "Amount of levels required to increase medal tier for each language level, in the user webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
-          "type": "number",
+          "type": "integer",
           "default": 0
         },
         "code-levels.views.medalRequirementForWorkspace": {
           "description": "Amount of levels required to increase medal tier for main workspace level, in the workspace webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
-          "type": "number",
-          "default": 0
+          "type": "integer",
+          "default": 5
         },
         "code-levels.views.medalRequirementForWorkspaceLanguage": {
           "description": "Amount of levels required to increase medal tier for each language level, in the workspace webview profile. Recommended value is 5. Any value lower than 0 disables this feature.",
-          "type": "number",
+          "type": "integer",
           "default": 0
+        },
+        "code-levels.views.medalOffsetForUser": {
+          "description": "For the user level, shifts medal requirement by one (a req. of 5 means increasing in tier at 6, 11, 16, etc.). Great with grades enabled.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.views.medalOffsetForUserLanguage": {
+          "description": "For the workspace level, shifts medal requirement by one (a req. of 5 means increasing in tier at 6, 11, 16, etc.). Great with grades enabled.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.views.medalOffsetForWorkspace": {
+          "description": "For the workspace level, shifts medal requirement by one (a req. of 5 means increasing in tier at 6, 11, 16, etc.). Great with grades enabled.",
+          "type": "boolean",
+          "default": false
+        },
+        "code-levels.views.medalOffsetForWorkspaceLanguage": {
+          "description": "For the user level, shifts medal requirement by one (a req. of 5 means increasing in tier at 6, 11, 16, etc.). Great with grades enabled.",
+          "type": "boolean",
+          "default": false
         },
         "code-levels.views.useAlternateStyle": {
           "description": "Changes the styling in the webview to focus on bars instead of rings. Most noticeable while using languages.",

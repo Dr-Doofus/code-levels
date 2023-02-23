@@ -56,54 +56,16 @@ _Bound to Ctrl+Alt+4 by default, or Command+Option+4 for Mac._
 * `code-levels.recalculate.workspacelang`: Exactly the same as `code-levels.recalculate.userlang`, but targets the workspace file instead. 
 
 # Extension Settings
-This extension contributes the following settings:  
-(This is quite a lot. You have been warned.)
-
-* `code-levels.caps.mainUser`: Limits the display of user level on the tooltip, status bar and webview. Doesn't affect the saved or loaded file, though, so you can safely turn this on and off without losing progress. A given number of 0 or lower means no cap.  
-* `code-levels.caps.mainWorkspace`: Same as `code-levels.caps.mainUser` but for the workspace.  
-* `code-levels.caps.userLanguage`: Same as `code-levels.caps.mainUser` but for all the user languages.  
-* `code-levels.caps.workspaceLanguage`: Same as `code-levels.caps.mainUser` but for all the workspace languages.  
-* `code-levels.status.advancedBar`: Replaces the usual Shell-like bar with a more advanced, 8-part alternative. Probably shifts around a lot on Windows machines, so it's off by default. Only useful if `code-levels.status.displayProgress` is on `Bar`.
-* `code-levels.status.displayProgress`: Replaces the bar with either nothing, a bar (default) or a percentage.
-* `code-levels.status.displayPercentPrecision`: If `code-levels.status.displayProgress` is on `Percentage`, this setting is used to define a set of decimals. The number is the amount of decimals plus one.
-* `code-levels.status.displayBarLength`: Allows you to set the length of the experience bar in segments. Any number from `1` to `50` is allowed. If you want the length set to `0`, why not just hide it instead using `code-levels.status.displayProgress`?
-* `code-levels.status.displayExperienceType`: Sets whichever experience type the bar should track. Does nothing if the target is not tracked, however. Possible options are `Main User Level`, `Main Workspace Level`, current `User Language Level` and current `Workspace Language Level`.
-* `code-levels.status.levelDisplayType`: Allows the user to set how the current level is displayed, if even at all. Also allows it to be set as a percentage next to a bar.
-* `code-levels.status.levelPercentPrecision`: Like `code-levels.status.displayPercentPrecision`, this sets the decimal precision of the `Percentage` setting in `code-levels.status.levelDisplayType`.
-* `code-levels.status.levelReadySymbol`: Shows a symbol if the bar/percentage is completely full to indicate that the user or workspace is ready to level up their main or language level, depending on whichever bar it tracks.
-* `code-levels.status.levelReadySymbolType`: For setting a different symbol next to the level if the bar is full. Used in tandem with `code-levels.status.levelReadySymbol`.
-* `code-levels.tooltip.enableTooltip`: Enables the tooltip when hovering over the status item, showing information about the user/workspace at a glance.
-* `code-levels.tooltip.enableUser`: Enables or disables the whole user segment of the tooltip `code-levels.tooltip.enableTooltip` offers.
-* `code-levels.tooltip.enableUserTotal`: Shows or hides the total experience gained for the user in the tooltip `code-levels.tooltip.enableTooltip` offers. Does nothing if main user level is not tracked.
-* `code-levels.tooltip.enableUserLanguage`: Shows or hides a very brief display of progress of the current language stored in the user file. Does nothing if user language level is not tracked.
-* `code-levels.tooltip.enableWorkspace`: Exactly the same as `code-levels.tooltip.enableUser` but targets the workspace instead.
-* `code-levels.tooltip.enableWorkspaceTotal`: Similar to `code-levels.tooltip.enableUserTotal` but for the workspace file.
-* `code-levels.tooltip.enableWorkspaceLanguage`: Similar to `code-levels.tooltip.enableUserLanguage` but for the workspace file instead.
-* `code-levels.tooltip.experienceSuffix`: Sets a specific text at the end of the final point value in each line that contains one.
-* `code-levels.user.name`: Pick the username. This is seen on the webview as well as used as the location on where the user file saves to. This allows multiple different users on the same machine. **UPON CHANGING THIS, THE EDITOR HAS TO BE RELOADED TO LOAD THE NEW USER FILE PROPERLY! THIS WILL CLOSE ANY DEBUG/RUN SESSIONS.**
-* `code-levels.user.tracking`: Enables or disables user file experience gain. The file will still be loaded and saved, but no experience will be given.
-* `code-levels.user.trackLanguage`: Enables or disables specific experience gain per language for the user. This is not dependent on `code-levels.user.tracking`.
-* `code-levels.workspace.tracking`: Same as `code-levels.user.tracking`, but for the workspace file instead.
-* `code-levels.workspace.trackLanguage`: Same as `code-levels.user.trackLanguage`, but for the workspace file instead.
-* `code-levels.user.levelMod`: Sets the modifier for the experience formula. Increasing this will make it harder to level up. I recommend it to be double the language experience modifier. **Changing any level mods will force a recalculation of the relevant levels.**
-* `code-levels.user.levelModLanguage`: Same as `code-levels.user.levelMod` but for every language instead. 
-* `code-levels.workspace.levelMod`: Same as `code-levels.user.levelMod`, but targets the workspace file instead.
-* `code-levels.workspace.levelModLanguage`: Same as `code-levels.user.levelModLanguage` but targets the workspace file.
-* `code-levels.other.bigNumberFormat`: Changes the suffixes for large numbers, if they are formatted. (i.e. 1k = one thousand, 1M = one million, 1B = one billion, etc.)
-* `code-levels.other.barCommandsAffectWorkspaceSettingsInstead`: With this on, any commands that change the bar mode will affect the Workspace settings instead of the user settings.
-* `code-levels.views.medalRequirementForUser`: If this value is above 0, a diamond-shaped "medal" appears next to the user name. If the user level passes a multiple of this number (i.e. if this value is 5, 5 or 10 or 15), the medal changes color. Recommended value is 5.
-* `code-levels.views.medalRequirementForUserLanguage`: Same as `code-levels.views.medalRequirementForUser` but for each user language instead.
-* `code-levels.views.medalRequirementForWorkspace`: Same as `code-levels.views.medalRequirementForUser` but for the workspace/workspace profile instead.
-* `code-levels.views.medalRequirementForWorkspaceLanguage`: Same as `code-levels.views.medalRequirementForUserLanguage` but for each workspace language found in the workspace profile.
-`code-levels.views.useAlternateStyle`: Changes up the layout of the webview a little to utilize bars more.
-
+Check the "Feature Contributions" tab for details.
+You can fine-tune literally almost every aspect of this extension to your personal preference.
 
 # Known Issues
 
+* __This extension will not track if you have no workspace open.__
 * On first usage, it will return an empty bar. Typing anything solves the problem. This also happens when typing in a language that the userfile hasn't recognized yet.  
 * Saving can possibly be finicky while editing in multiple instances of Code. Effort has been made to fix this behavior but I cannot guarantee its behavior to be perfectly normal...  
 **ESPECIALLY IN MULTIPLE INSTANCES WITH THE SAME USER, I CAN'T VOUCH FOR YOUR USERFILE'S INTEGRITY.**  
-* After changing the language mode for a document, I advise saving first so the tracking can continue.
+* After changing the language mode for a document, reopen the file to see its changes.
 * Editing the settings and/or running some commands also gives you free points because they seem to make changes to documents. It's much heavier on the process itself than simply holding down a button, so I don't feel the urgent need to fix that as there's a more exploitable alternative. Remember, the only person you're ruining the experience for is yourself should you choose to exploit it anyway.  
 * After using one of the commands to change the progress bar type to a language mode, it will show full experience & no level until you type. This is to prevent the settings menu to show a language that doesn't exist. Running the command twice also works to fix itself.  
 * When using the tooltip to glance at a language ready to level up, it will stay at 99% to prevent taking up too much space (some languages are LONG.). One would probably not obsessively look at it and should prefer to use the webview instead for that.  
@@ -174,8 +136,26 @@ __To minimize the risk of data loss, before closing, save a file on the active i
 ## 1.2.2
 * Fixed bug where `C` actually was interpreted as `code-text-binary`.
 
+## 1.3.0 
+* **NOTE: This is a big update. Issues may occur. I'll fix them when I see them.**
+* Allowed users to translate their levels to "Grades", which can be customized by going inside the extension yourself and checking out `-grades.js`. Your level = your grade.
+* Changes in level mods are seen in the webview.
+* Added a bunch of new settings:
+- - `code-levels.grade.enableForUser`
+- - `code-levels.grade.enableForUserLanguage`
+- - `code-levels.grade.enableForWorkspace`
+- - `code-levels.grade.enableForWorkspaceLanguage`
+- - `code-levels.views.medalOffsetForUser`
+- - `code-levels.views.medalOffsetForLanguage`
+- - `code-levels.views.medalOffsetForWorkspace`
+- - `code-levels.views.medalOffsetForWorkspaceLanguage`
+- - `code-levels.status.verticalBarFill`
+* Made IGM look a little nicer in text, per request.
+* Converted all configs to an integer to disallow decimals.
+* Changed the license because I suck at legal things.
+
 # Credits
-**DrDoofus**: Programming the extension in its entirety.  
+**Dr-Doofus**: Programming the extension in its entirety.  
 **Plasmawario**: Testing the extension in its early phase.  
 **Artum**: Credited for absolutely no reason.
 And you, for actually noticing this extension.

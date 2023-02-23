@@ -71,7 +71,8 @@ const data = {
     //custom baked in stuff
     "docker": "Docker",
     "gml": "GML",
-    "gdscript": "GDScript"
+    "gdscript": "GDScript",
+    "igm": "IGM"
 }
 
 module.exports = {
