@@ -2,7 +2,7 @@
   "name": "code-levels",
   "displayName": "VS Code Levels",
   "description": "Adds various experience bars to track your coding progress",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "publisher": "DrDoofus",
   "engines": {
     "vscode": "^1.73.0"
@@ -127,6 +127,12 @@
           "type": "integer",
           "default": 0,
           "scope": "application"
+        },
+        "code-levels.grades.customSequence": {
+          "description": "A comma-separated sequence of grades you want to show. Empty string means disabled. Quotes, <>, and \\&$ are not allowed. \\n is a newline. You can paste unicode in as well! First item is level 1, second item is level 2, etc.",
+          "type": "string",
+          "default": "",
+          "maxLength": 8192
         },
         "code-levels.grades.enableForUser": {
           "description": "Translates levels to grades (i.e. Lv16 = B+) for the user level.",

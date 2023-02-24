@@ -103,18 +103,18 @@ These features are new or built upon:
 * Added new config options related to the webview, as medals are now enabled.
 * Webview now updates on configuration change, save and active editor change.
 
-## 1.0.1
+### 1.0.1
 * Fixed Workspace language tracking webview showing incorrect information.
 * Showed "vanilla Markdown" being shown incorrectly.
 
-## 1.0.2
+### 1.0.2
 * Made it so that it only saves when either user tracking settings are enabled. This alleviates some risks of overwriting the data.  
 __To minimize the risk of data loss, before closing, save a file on the active instance with the most user progress. Also consider making workspace settings that disable user tracking or disable the extension entirely in that other instance.__
 
-## 1.0.3
+### 1.0.3
 * Fixed uncaught exceptions while saving.
 
-## 1.0.4
+### 1.0.4
 * Fixed a few unnecessary requires.
 * Divides all experience requirements by 5.
 
@@ -123,20 +123,20 @@ __To minimize the risk of data loss, before closing, save a file on the active i
 * Added convert from go.mod => go.
 * Added config option to replace text at the end of tooltip point values.
 
-## 1.1.1
+### 1.1.1
 * Documentation hotfix.
 
 ## 1.2.0
 * Fixed an ancient CSS problem I never noticed would affect something.
 * New configuration setting `code-levels.views.useAlternateStyle` that switches up the layout to use more bars.
 
-## 1.2.1
+### 1.2.1
 * Fixed a small CSS issue with alternative style.
 
-## 1.2.2
+### 1.2.2
 * Fixed bug where `C` actually was interpreted as `code-text-binary`.
 
-## 1.3.0 
+## 1.3.0 - the upGRADE, part 1
 * **NOTE: This is a big update. Issues may occur. I'll fix them when I see them.**
 * Allowed users to translate their levels to "Grades", which can be customized by going inside the extension yourself and checking out `-grades.js`. Your level = your grade.
 * Changes in level mods are seen in the webview.
@@ -154,12 +154,22 @@ __To minimize the risk of data loss, before closing, save a file on the active i
 * Converted all configs to an integer to disallow decimals.
 * Changed the license because I suck at legal things.
 
-## 1.3.1
+### 1.3.1
 * **THIS UPDATE FIXES A SECURITY ISSUE.**
 * Fixed the webview name wrapping badly.
 
-## 1.3.2
+### 1.3.2
 * Fixed an issue regarding newlines in grades with the alternate styles in the webview.
+
+## 1.4.0 - the upGRADE, part 2
+* Shortened the original grade text because it's obviously overkill
+* Added ability to customize the grade text. Only copy safe strings, just to be sure.
+* Added support for AngelScript.
+
+**bonus**: for the people that want the old style back, insert this in the custom sequence:
+```
+G-,G,G+,F-,F,F+,E-,E,E+,D-,D,D+,C-,C,C+,B-,B,B+,A-,A,A+,S-,S,S+,SS-,SS,SS+,SSS-,SSS,SSS+,⋆,☆,★,★⋆,★☆,★★,★★⋆,★★☆,★★★,★★★⋆,★★★☆,★★★★,★★★★⋆,★★★★☆,★★★★★,★★★★★⋆,★★★★★☆,★★★★★★,★★★★★★⋆,★★★★★★☆,★★★★★★★,★★★★★★★\n⋆,★★★★★★★\n☆,★★★★★★★\n★,★★★★★★★\n★⋆,★★★★★★★\n★☆,★★★★★★★\n★★,★★★★★★★\n★★⋆,★★★★★★★\n★★☆,★★★★★★★\n★★★,10★ ⋆,10★ ☆,11★,11★ ⋆,11★ ☆,12★,12★ ⋆,12★ ☆,13★,13★ ⋆,13★ ☆,14★,14★ ⋆,14★ ☆,15★,15★ ⋆,15★ ☆,16★,16★ ⋆,16★ ☆,17★,17★ ⋆,17★ ☆,18★,18★ ⋆,18★ ☆,19★,19★ ⋆,19★ ☆,20★,20★ ⋆,20★ ☆,21★,21★ ⋆,21★ ☆,22★,22★ ⋆,22★ ☆,23★,23★ ⋆,23★ ☆,24★,24★ ⋆,24★ ☆,25★,25★ ⋆,25★ ☆,26★,26★ ⋆,26★ ☆,27★,27★ ⋆,27★ ☆,28★,28★ ⋆,28★ ☆,29★,29★ ⋆,29★ ☆,30★
+```
 
 # Credits
 **Dr-Doofus**: Programming the extension in its entirety.  

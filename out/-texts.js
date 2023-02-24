@@ -72,7 +72,8 @@ const data = {
     "docker": "Docker",
     "gml": "GML",
     "gdscript": "GDScript",
-    "igm": "IGM"
+    "igm": "IGM",
+    "angelscript": "AngelScript"
 }
 
 module.exports = {
