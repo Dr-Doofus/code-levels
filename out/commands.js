@@ -49,7 +49,7 @@ function register(c) {
     let forceRecalcWorkspace = vc.commands.registerCommand('code-levels.recalculate.workspace', () => {
         const cfg = conf.load();
         mod = cfg.workspace.levelMod;
-        //lvlogic.workspaceLevelFix(mod);
+        lvlogic.workspaceLevelFix(mod);
         status.update(0, language.get());
     });
     let forceRecalcUserLang = vc.commands.registerCommand('code-levels.recalculate.userlang', () => {
