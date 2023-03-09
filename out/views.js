@@ -71,7 +71,7 @@ function userUpdate() {
     } 
     if (cfg.user.levelModLanguage != 5 && typeof cfg.user.levelModLanguage == "number") {
         mcount++;
-        modL = "Language mod " + cfg.user.levelModLanguage;
+        modL = "Lang mod " + cfg.user.levelModLanguage;
     } 
     if (mcount > 1) {
         modS = ", "
@@ -201,10 +201,14 @@ function userUpdate() {
                 let name = arr[i][0];
                 let level = arr[i][1].lvl;
                 let exp = arr[i][1].exp;
-                //If all ^ this is defined, from then onwards we can do stuff.
+                //If name, level, exp is defined, from then onwards we can do stuff.
                 if (name && level && exp) {
-                    //open lp tag
-                    content += `<div lp>`
+                    //open lp tag (changes behavior if this language is found in the pinned stuff tab)
+                    if (cfg.views.pinsForUser.includes(name + ";")) {
+                        content += `<div lp style="order:-1;">`;
+                    } else {
+                        content += `<div lp>`;
+                    }
                     //get level (which is capped btw)
                     level = Math.min(level, cap);
                     let mode = 1; //used to determine tag
@@ -331,11 +335,11 @@ function workspaceUpdate() {
     
     if (cfg.workspace.levelMod != 10 && typeof cfg.workspace.levelMod == "number") {
         mcount++;
-        modU = "Workspace mod " + cfg.workspace.levelMod;
+        modU = "Main mod " + cfg.workspace.levelMod;
     } 
     if (cfg.workspace.levelModLanguage != 5 && typeof cfg.workspace.levelModLanguage == "number") {
         mcount++;
-        modL = "Language mod " + cfg.workspace.levelModLanguage;
+        modL = "Lang mod " + cfg.workspace.levelModLanguage;
     } 
     if (mcount > 1) {
         modS = ", "
@@ -463,10 +467,14 @@ function workspaceUpdate() {
                 let name = arr[i][0];
                 let level = arr[i][1].lvl;
                 let exp = arr[i][1].exp;
-                //If all ^ this is defined, from then onwards we can do stuff.
+                //If name, level, exp is defined, from then onwards we can do stuff.
                 if (name && level && exp) {
-                    //open lp tag
-                    content += `<div lp>`
+                    //open lp tag (changes behavior if this language is found in the pinned stuff tab)
+                    if (cfg.views.pinsForWorkspace.includes(name + ";")) {
+                        content += `<div lp style="order:-1;">`;
+                    } else {
+                        content += `<div lp>`;
+                    }
                     //get level (which is capped btw)
                     level = Math.min(level, cap);
                     let mode = 1; //used to determine tag

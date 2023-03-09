@@ -2,7 +2,7 @@
   "name": "code-levels",
   "displayName": "VS Code Levels",
   "description": "Adds various experience bars to track your coding progress",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "publisher": "DrDoofus",
   "engines": {
     "vscode": "^1.73.0"
@@ -450,6 +450,18 @@
           "description": "Changes the styling in the webview to focus on bars instead of rings. Most noticeable while using languages.",
           "type": "boolean",
           "default": false
+        },
+        "code-levels.views.pinsForUser": {
+          "description": "A semicolon (;) separated/suffixed list of languages that are forced to be in front of the rest. Useful for showing specialties. Use language IDs here (i.e. 'cpp' instead of 'C++'). Remember to always end with a semicolon (;)!",
+          "type": "string",
+          "default": "",
+          "maxLength": 4096
+        },
+        "code-levels.views.pinsForWorkspace": {
+          "description": "Like 'Views > Pins For User', but for the workspace instead. Recommended to only edit in Workspace settings. Again, remember to end each language with a semicolon (;)!",
+          "type": "string",
+          "default": "",
+          "maxLength": 4096
         }
       }
     }
