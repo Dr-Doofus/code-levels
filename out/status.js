@@ -268,7 +268,12 @@ function update(value, language = false) {
         let pct2 = parseFloat(pct).toFixed(displayDeci-1);
         if (Math.abs(pct) < 10) {
             let pct3 = pct2.toString();
-            pctF = "0" + pct3;
+            if (cfg.status.leadingZeroesOnPercentages) {
+                pctF = "0" + pct3;
+            }
+            else {
+                pctF = pct3;
+            }
         } else {
             pctF = pct2;
         }
@@ -340,7 +345,12 @@ function update(value, language = false) {
             let pct2 = parseFloat(pct).toFixed(levelDeci-1);
             if (Math.abs(pct) < 10) {
                 let pct3 = pct2.toString();
-                pctF = "0" + pct3;
+                if (cfg.status.leadingZeroesOnPercentages) {
+                    pctF = "0" + pct3;
+                }
+                else {
+                    pctF = pct3;
+                }
             } else {
                 pctF = pct2;
             }

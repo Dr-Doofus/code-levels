@@ -177,10 +177,13 @@ G-,G,G+,F-,F,F+,E-,E,E+,D-,D,D+,C-,C,C+,B-,B,B+,A-,A,A+,S-,S,S+,SS-,SS,SS+,SSS-,
 ### 1.4.2
 * Shortened mod texts in the webview.
 
-### 1.5.0 - sortage
+## 1.5.0 - sortage
 * Added settings to "pin" languages in the first spaces of the webview. These settings are:
 `code-levels.views.pinsForUser` and `code-levels.views.pinsForWorkspace`
 **NOTE**: all languages have to end with a semicolon (;) until they will be sorted!
+
+### 1.5.1
+* Fixed an age old typo in the configuration.
 
 # Credits
 **Dr-Doofus**: Programming the extension in its entirety.  

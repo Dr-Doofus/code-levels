@@ -2,7 +2,7 @@
   "name": "code-levels",
   "displayName": "VS Code Levels",
   "description": "Adds various experience bars to track your coding progress",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "publisher": "DrDoofus",
   "engines": {
     "vscode": "^1.73.0"
@@ -214,6 +214,11 @@
             "User Language Level",
             "Workspace Language Level"
           ]
+        },
+        "code-levels.status.leadingZeroesOnPercentages": {
+          "description": "Shows or hides the leading zero if percentages are less than 10. Enable this is you think the percentages move too much.",
+          "type": "boolean",
+          "default": "false"
         },
         "code-levels.status.levelDisplayType": {
           "description": "Choose how the experience level should be shown.",
@@ -432,7 +437,7 @@
           "default": false
         },
         "code-levels.views.medalOffsetForUserLanguage": {
-          "description": "For the workspace level, shifts medal requirement by one (a req. of 5 means increasing in tier at 6, 11, 16, etc.). Great with grades enabled.",
+          "description": "For the user level, shifts medal requirement by one (a req. of 5 means increasing in tier at 6, 11, 16, etc.). Great with grades enabled.",
           "type": "boolean",
           "default": false
         },
@@ -442,7 +447,7 @@
           "default": false
         },
         "code-levels.views.medalOffsetForWorkspaceLanguage": {
-          "description": "For the user level, shifts medal requirement by one (a req. of 5 means increasing in tier at 6, 11, 16, etc.). Great with grades enabled.",
+          "description": "For the workspace level, shifts medal requirement by one (a req. of 5 means increasing in tier at 6, 11, 16, etc.). Great with grades enabled.",
           "type": "boolean",
           "default": false
         },
