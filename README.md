@@ -184,6 +184,7 @@ G-,G,G+,F-,F,F+,E-,E,E+,D-,D,D+,C-,C,C+,B-,B,B+,A-,A,A+,S-,S,S+,SS-,SS,SS+,SSS-,
 
 ### 1.5.1
 * Fixed an age old typo in the configuration.
+* It's now possible to turn off leading zeroes on percentages using the `code-levels.status.leadingZeroesOnPercentages` setting.
 
 # Credits
 **Dr-Doofus**: Programming the extension in its entirety.  
